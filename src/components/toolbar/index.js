@@ -30,6 +30,10 @@ const mapDispatchToProps = function(dispatch) {
 
     showTooltip: () => {
       dispatch(EditorActions.showTooltip());
+    },
+
+    downloadRendered: () => {
+      dispatch(EditorActions.downloadRendered());
     }
   };
 };

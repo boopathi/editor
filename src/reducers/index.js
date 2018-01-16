@@ -1,8 +1,8 @@
 import * as vl from 'vega-lite';
 
-import {UPDATE_VEGA_SPEC, UPDATE_VEGA_LITE_SPEC, PARSE_SPEC, TOGGLE_AUTO_PARSE, CYCLE_RENDERER, SET_VEGA_EXAMPLE, SET_VEGA_LITE_EXAMPLE,
-  SHOW_COMPILED_VEGA_SPEC, SET_GIST_VEGA_SPEC, SET_GIST_VEGA_LITE_SPEC, SET_MODE, SHOW_ERROR_PANE, LOG_ERROR,
-  UPDATE_EDITOR_STRING, SHOW_TOOLTIP} from '../actions/editor';
+import {UPDATE_VEGA_SPEC, UPDATE_VEGA_LITE_SPEC, PARSE_SPEC, TOGGLE_AUTO_PARSE, CYCLE_RENDERER, DOWNLOAD_RENDERED,
+  SET_VEGA_EXAMPLE, SET_VEGA_LITE_EXAMPLE, SHOW_COMPILED_VEGA_SPEC, SET_GIST_VEGA_SPEC, SET_GIST_VEGA_LITE_SPEC,
+  SET_MODE, SHOW_ERROR_PANE, LOG_ERROR, UPDATE_EDITOR_STRING, SHOW_TOOLTIP} from '../actions/editor';
 
 import {MODES, RENDERERS, DEFAULT_STATE} from '../constants';
 import {validateVegaLite, validateVega} from '../utils/validate';
@@ -150,6 +150,24 @@ export default (state = DEFAULT_STATE, action) => {
         ...state,
         renderer: nextRenderer
       };
+    }
+    case DOWNLOAD_RENDERED: {
+      let fileType = 'png';
+
+      if (state.renderer === 'svg') {
+        fileType = 'svg';
+      }
+
+      // Hackity Hack Hack Hack!
+      window.VEGA_DEBUG.view.toImageURL(fileType).then(url => {
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('download', 'vega-export.' + fileType);
+        link.dispatchEvent(new MouseEvent('click'));
+      });
+
+      return state;
     }
     case SHOW_COMPILED_VEGA_SPEC:
       return {

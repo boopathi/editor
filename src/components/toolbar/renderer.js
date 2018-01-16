@@ -55,6 +55,9 @@ export default class Toolbar extends React.Component {
             `Renderer: ${this.props.renderer}`
           }
         </div>
+        <div className='export-rendered' onClick={this.props.downloadRendered}>
+          Export
+        </div>
       </div>
     );
   }
